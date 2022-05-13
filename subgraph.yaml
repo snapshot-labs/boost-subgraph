@@ -1,0 +1,32 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Boost
+    network: rinkeby
+    source:
+      address: "0x8C6F2497FF0DC4edDc60507e3ec86FADC1FDF578"
+      abi: Boost
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - BoostClaimed
+        - BoostCreated
+        - BoostDeposited
+        - BoostWithdrawn
+      abis:
+        - name: Boost
+          file: ./abis/Boost.json
+      eventHandlers:
+        - event: BoostClaimed(uint256,address)
+          handler: handleBoostClaimed
+        - event: BoostCreated(uint256)
+          handler: handleBoostCreated
+        - event: BoostDeposited(uint256,address,uint256)
+          handler: handleBoostDeposited
+        - event: BoostWithdrawn(uint256)
+          handler: handleBoostWithdrawn
+      file: ./src/mapping.ts
