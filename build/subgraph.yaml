@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Boost
@@ -16,7 +16,7 @@ dataSources:
         - Boost
       abis:
         - name: Boost
-          file: ./abis/Boost.json
+          file: Boost/abis/Boost.json
       eventHandlers:
         - event: BoostClaimed(uint256,address)
           handler: handleBoostClaimed
@@ -26,4 +26,4 @@ dataSources:
           handler: handleBoostDeposited
         - event: BoostWithdrawn(uint256)
           handler: handleBoostWithdrawn
-      file: ./src/mapping.ts
+      file: Boost/Boost.wasm

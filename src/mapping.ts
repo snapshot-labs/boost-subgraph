@@ -1,63 +1,60 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  Boost,
+  Boost as BoostContract,
   BoostClaimed,
   BoostCreated,
   BoostDeposited,
   BoostWithdrawn
 } from "../generated/Boost/Boost"
-import { ExampleEntity } from "../generated/schema"
+import {
+  Boost as BoostEntity,
+  Deposit as DepositEntity,
+  Claim as ClaimEntity,
+} from "../generated/schema"
 
-export function handleBoostClaimed(event: BoostClaimed): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+export function handleBoostCreated(event: BoostCreated): void {
+  let boostEntity = new BoostEntity(event.params.id.toHex())
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
+  let contract = BoostContract.bind(event.address)
+  let createdBoost = contract.boosts(event.params.id)
 
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.id = event.params.id
-  entity.recipient = event.params.recipient
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.MAX_CLAIM_RECIPIENTS(...)
-  // - contract.boostIdsByRef(...)
-  // - contract.boosts(...)
-  // - contract.claimed(...)
-  // - contract.getBoost(...)
-  // - contract.getBoostIdsByRef(...)
-  // - contract.nextBoostId(...)
+  boostEntity.ref = createdBoost.value0
+  boostEntity.token = createdBoost.value1
+  boostEntity.amountPerAccount = createdBoost.value2
+  boostEntity.balance = createdBoost.value3
+  boostEntity.guard = createdBoost.value4
+  boostEntity.expires = createdBoost.value5
+  boostEntity.save()
 }
 
-export function handleBoostCreated(event: BoostCreated): void {}
+export function handleBoostDeposited(event: BoostDeposited): void {
+  let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
+  depositEntity.boost = event.params.id.toHex()
+  depositEntity.sender = event.params.sender
+  depositEntity.amount = event.params.amount
+  depositEntity.save()
 
-export function handleBoostDeposited(event: BoostDeposited): void {}
+  let contract = BoostContract.bind(event.address)
+  let boost = contract.boosts(event.params.id)
+  let boostEntity = BoostEntity.load(event.params.id.toHex())
+  if (boostEntity != null) {
+    boostEntity.balance = boost.value3
+    boostEntity.save()
+  }
+}
+
+export function handleBoostClaimed(event: BoostClaimed): void {
+  let claimEntity = new ClaimEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
+  claimEntity.boost = event.params.id.toHex()
+  claimEntity.recipient = event.params.recipient
+  claimEntity.save()
+
+  let contract = BoostContract.bind(event.address)
+  let boost = contract.boosts(event.params.id)
+  let boostEntity = BoostEntity.load(event.params.id.toHex())
+  if (boostEntity != null) {
+    boostEntity.balance = boost.value3
+    boostEntity.save()
+  }
+}
 
 export function handleBoostWithdrawn(event: BoostWithdrawn): void {}
