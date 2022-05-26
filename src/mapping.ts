@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts"
 import {
   Boost as BoostContract,
   BoostClaimed,
@@ -57,4 +58,10 @@ export function handleBoostClaimed(event: BoostClaimed): void {
   }
 }
 
-export function handleBoostWithdrawn(event: BoostWithdrawn): void {}
+export function handleBoostWithdrawn(event: BoostWithdrawn): void {
+  let boostEntity = BoostEntity.load(event.params.id.toHex())
+  if (boostEntity != null) {
+    boostEntity.balance = BigInt.fromString("0")
+    boostEntity.save()
+  }
+}
