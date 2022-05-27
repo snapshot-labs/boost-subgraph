@@ -48,6 +48,42 @@ export class BoostCreated__Params {
   get id(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
+
+  get boost(): BoostCreatedBoostStruct {
+    return changetype<BoostCreatedBoostStruct>(
+      this._event.parameters[1].value.toTuple()
+    );
+  }
+}
+
+export class BoostCreatedBoostStruct extends ethereum.Tuple {
+  get ref(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get token(): Address {
+    return this[1].toAddress();
+  }
+
+  get balance(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get amountPerAccount(): BigInt {
+    return this[3].toBigInt();
+  }
+
+  get guard(): Address {
+    return this[4].toAddress();
+  }
+
+  get expires(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get owner(): Address {
+    return this[6].toAddress();
+  }
 }
 
 export class BoostDeposited extends ethereum.Event {
@@ -137,29 +173,6 @@ export class Boost__boostsResult {
 export class Boost extends ethereum.SmartContract {
   static bind(address: Address): Boost {
     return new Boost("Boost", address);
-  }
-
-  MAX_CLAIM_RECIPIENTS(): BigInt {
-    let result = super.call(
-      "MAX_CLAIM_RECIPIENTS",
-      "MAX_CLAIM_RECIPIENTS():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_MAX_CLAIM_RECIPIENTS(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "MAX_CLAIM_RECIPIENTS",
-      "MAX_CLAIM_RECIPIENTS():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   boosts(param0: BigInt): Boost__boostsResult {

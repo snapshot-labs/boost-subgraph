@@ -15,17 +15,20 @@ import {
 export function handleBoostCreated(event: BoostCreated): void {
   let boostEntity = new BoostEntity(event.params.id.toHex())
 
-  let contract = BoostContract.bind(event.address)
-  let createdBoost = contract.boosts(event.params.id)
-
-  boostEntity.ref = createdBoost.value0
-  boostEntity.token = createdBoost.value1
-  boostEntity.balance = createdBoost.value2
-  boostEntity.amountPerAccount = createdBoost.value3
-  boostEntity.guard = createdBoost.value4
-  boostEntity.expires = createdBoost.value5
-  boostEntity.owner = createdBoost.value6
+  boostEntity.ref = event.params.boost.ref
+  boostEntity.token = event.params.boost.token
+  boostEntity.balance = event.params.boost.balance
+  boostEntity.amountPerAccount = event.params.boost.amountPerAccount
+  boostEntity.guard = event.params.boost.guard
+  boostEntity.expires = event.params.boost.expires
+  boostEntity.owner = event.params.boost.owner
   boostEntity.save()
+
+  let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
+  depositEntity.boost = event.params.id.toHex()
+  depositEntity.sender = event.params.boost.owner
+  depositEntity.amount = event.params.boost.balance
+  depositEntity.save()
 }
 
 export function handleBoostDeposited(event: BoostDeposited): void {

@@ -60,17 +60,6 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "allowed",
-        "type": "uint256"
-      }
-    ],
-    "name": "TooManyRecipients",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -97,6 +86,49 @@
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "ref",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountPerAccount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "guard",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expires",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Boost.BoostSettings",
+        "name": "boost",
+        "type": "tuple"
       }
     ],
     "name": "BoostCreated",
@@ -139,19 +171,6 @@
     ],
     "name": "BoostWithdrawn",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "MAX_CLAIM_RECIPIENTS",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [

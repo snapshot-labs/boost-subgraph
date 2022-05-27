@@ -6,7 +6,7 @@ dataSources:
     name: Boost
     network: rinkeby
     source:
-      address: "0x1dddcd7dbfc4c6f7dfb44df6528303273013bee4"
+      address: "0xc0528d60fad1bb18e6d487ef1633d9b91b856f4a"
       abi: Boost
       startBlock: 10738289
     mapping:
@@ -21,7 +21,7 @@ dataSources:
       eventHandlers:
         - event: BoostClaimed(uint256,address)
           handler: handleBoostClaimed
-        - event: BoostCreated(uint256)
+        - event: BoostCreated(uint256,(bytes32,address,uint256,uint256,address,uint256,address))
           handler: handleBoostCreated
         - event: BoostDeposited(uint256,address,uint256)
           handler: handleBoostDeposited
