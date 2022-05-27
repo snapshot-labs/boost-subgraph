@@ -24,6 +24,7 @@ export function handleBoostCreated(event: BoostCreated): void {
   boostEntity.balance = createdBoost.value3
   boostEntity.guard = createdBoost.value4
   boostEntity.expires = createdBoost.value5
+  boostEntity.owner = createdBoost.value6
   boostEntity.save()
 }
 
