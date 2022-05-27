@@ -20,8 +20,8 @@ export function handleBoostCreated(event: BoostCreated): void {
 
   boostEntity.ref = createdBoost.value0
   boostEntity.token = createdBoost.value1
-  boostEntity.amountPerAccount = createdBoost.value2
-  boostEntity.balance = createdBoost.value3
+  boostEntity.balance = createdBoost.value2
+  boostEntity.amountPerAccount = createdBoost.value3
   boostEntity.guard = createdBoost.value4
   boostEntity.expires = createdBoost.value5
   boostEntity.owner = createdBoost.value6
