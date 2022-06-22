@@ -68,6 +68,15 @@ export class Deposit extends Entity {
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
   }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
 }
 
 export class Claim extends Entity {
@@ -118,6 +127,24 @@ export class Claim extends Entity {
   set recipient(value: Bytes) {
     this.set("recipient", Value.fromBytes(value));
   }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
 }
 
 export class Boost extends Entity {
@@ -151,13 +178,13 @@ export class Boost extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get ref(): Bytes {
-    let value = this.get("ref");
-    return value!.toBytes();
+  get strategyURI(): string {
+    let value = this.get("strategyURI");
+    return value!.toString();
   }
 
-  set ref(value: Bytes) {
-    this.set("ref", Value.fromBytes(value));
+  set strategyURI(value: string) {
+    this.set("strategyURI", Value.fromString(value));
   }
 
   get token(): Bytes {
@@ -196,13 +223,22 @@ export class Boost extends Entity {
     this.set("guard", Value.fromBytes(value));
   }
 
-  get expires(): BigInt {
-    let value = this.get("expires");
-    return value!.toBigInt();
+  get start(): i32 {
+    let value = this.get("start");
+    return value!.toI32();
   }
 
-  set expires(value: BigInt) {
-    this.set("expires", Value.fromBigInt(value));
+  set start(value: i32) {
+    this.set("start", Value.fromI32(value));
+  }
+
+  get end(): i32 {
+    let value = this.get("end");
+    return value!.toI32();
+  }
+
+  set end(value: i32) {
+    this.set("end", Value.fromI32(value));
   }
 
   get owner(): Bytes {
@@ -246,5 +282,14 @@ export class Boost extends Entity {
     } else {
       this.set("claims", Value.fromStringArray(<Array<string>>value));
     }
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
   }
 }

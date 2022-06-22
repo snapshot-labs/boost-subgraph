@@ -3,23 +3,28 @@ type Deposit @entity {
   boost: Boost!
   sender: Bytes!
   amount: BigInt!
+  blockNumber: BigInt!
 }
 
 type Claim @entity {
   id: ID!
   boost: Boost!
   recipient: Bytes!
+  amount: BigInt!
+  blockNumber: BigInt!
 }
 
 type Boost @entity {
   id: ID!
-  ref: Bytes!
+  strategyURI: String!
   token: Bytes!
   balance: BigInt!
   amountPerAccount: BigInt!
   guard: Bytes!
-  expires: BigInt!
+  start: Int!
+  end: Int!
   owner: Bytes!
   deposits: [Deposit!] @derivedFrom(field: "boost")
   claims: [Claim!] @derivedFrom(field: "boost")
+  blockNumber: BigInt!
 }

@@ -1,10 +1,10 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
   Boost as BoostContract,
-  BoostClaimed,
   BoostCreated,
-  BoostDeposited,
-  BoostWithdrawn
+  TokensClaimed,
+  TokensDeposited,
+  RemainingTokensWithdrawn
 } from "../generated/Boost/Boost"
 import {
   Boost as BoostEntity,
@@ -13,57 +13,62 @@ import {
 } from "../generated/schema"
 
 export function handleBoostCreated(event: BoostCreated): void {
-  let boostEntity = new BoostEntity(event.params.id.toHex())
+  const boostId = event.params.boostId.toHex()
+  let boostEntity = new BoostEntity(boostId)
 
-  boostEntity.ref = event.params.boost.ref
+  boostEntity.strategyURI = event.params.boost.strategyURI
   boostEntity.token = event.params.boost.token
   boostEntity.balance = event.params.boost.balance
-  boostEntity.amountPerAccount = event.params.boost.amountPerAccount
   boostEntity.guard = event.params.boost.guard
-  boostEntity.expires = event.params.boost.expires
+  boostEntity.start = event.params.boost.start.toI32()
+  boostEntity.end = event.params.boost.end.toI32()
   boostEntity.owner = event.params.boost.owner
+  boostEntity.blockNumber = event.block.number
   boostEntity.save()
 
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
-  depositEntity.boost = event.params.id.toHex()
+  depositEntity.boost = boostId
   depositEntity.sender = event.params.boost.owner
   depositEntity.amount = event.params.boost.balance
+  depositEntity.blockNumber = event.block.number
   depositEntity.save()
 }
 
-export function handleBoostDeposited(event: BoostDeposited): void {
+export function handleTokensClaimed(event: TokensClaimed): void {
+  const boostId = event.params.claim.boostId.toHex()
+
+  let claimEntity = new ClaimEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
+  claimEntity.boost = boostId
+  claimEntity.recipient = event.params.claim.recipient
+  claimEntity.amount = event.params.claim.amount
+  claimEntity.blockNumber = event.block.number
+  claimEntity.save()
+
+  let boostEntity = BoostEntity.load(boostId)
+  if (boostEntity != null) {
+    boostEntity.balance = boostEntity.balance.minus(claimEntity.amount)
+    boostEntity.save()
+  }
+}
+
+export function handleTokensDeposited(event: TokensDeposited): void {
+  const boostId = event.params.boostId.toHex()
+  
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
-  depositEntity.boost = event.params.id.toHex()
+  depositEntity.boost = boostId
   depositEntity.sender = event.params.sender
   depositEntity.amount = event.params.amount
   depositEntity.save()
 
-  let contract = BoostContract.bind(event.address)
-  let boost = contract.boosts(event.params.id)
-  let boostEntity = BoostEntity.load(event.params.id.toHex())
+  let boostEntity = BoostEntity.load(boostId)
   if (boostEntity != null) {
-    boostEntity.balance = boost.value3
+    boostEntity.balance = boostEntity.balance.plus(event.params.amount)
     boostEntity.save()
   }
 }
 
-export function handleBoostClaimed(event: BoostClaimed): void {
-  let claimEntity = new ClaimEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
-  claimEntity.boost = event.params.id.toHex()
-  claimEntity.recipient = event.params.recipient
-  claimEntity.save()
-
-  let contract = BoostContract.bind(event.address)
-  let boost = contract.boosts(event.params.id)
-  let boostEntity = BoostEntity.load(event.params.id.toHex())
-  if (boostEntity != null) {
-    boostEntity.balance = boost.value3
-    boostEntity.save()
-  }
-}
-
-export function handleBoostWithdrawn(event: BoostWithdrawn): void {
-  let boostEntity = BoostEntity.load(event.params.id.toHex())
+export function handleRemainingTokensWithdrawn(event: RemainingTokensWithdrawn): void {
+  let boostEntity = BoostEntity.load(event.params.boostId.toHex())
   if (boostEntity != null) {
     boostEntity.balance = BigInt.fromString("0")
     boostEntity.save()

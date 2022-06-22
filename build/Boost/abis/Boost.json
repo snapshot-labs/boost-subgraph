@@ -1,16 +1,6 @@
 [
   {
     "inputs": [],
-    "name": "BoostAmountPerAccountRequired",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "BoostDepositLessThanAmountPerAccount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "BoostDepositRequired",
     "type": "error"
   },
@@ -21,22 +11,49 @@
   },
   {
     "inputs": [],
-    "name": "BoostExpireTooLow",
+    "name": "BoostEndDateBeforeStart",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "BoostExpired",
+    "name": "BoostEndDateInPast",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "BoostNotExpired",
+    "name": "BoostEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "end",
+        "type": "uint256"
+      }
+    ],
+    "name": "BoostNotEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "start",
+        "type": "uint256"
+      }
+    ],
+    "name": "BoostNotStarted",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InsufficientBoostBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidGuard",
     "type": "error"
   },
   {
@@ -65,34 +82,15 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      }
-    ],
-    "name": "BoostClaimed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "id",
+        "name": "boostId",
         "type": "uint256"
       },
       {
         "components": [
           {
-            "internalType": "bytes32",
-            "name": "ref",
-            "type": "bytes32"
+            "internalType": "string",
+            "name": "strategyURI",
+            "type": "string"
           },
           {
             "internalType": "address",
@@ -105,18 +103,18 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "amountPerAccount",
-            "type": "uint256"
-          },
-          {
             "internalType": "address",
             "name": "guard",
             "type": "address"
           },
           {
             "internalType": "uint256",
-            "name": "expires",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
             "type": "uint256"
           },
           {
@@ -126,7 +124,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct Boost.BoostSettings",
+        "internalType": "struct IBoost.Boost",
         "name": "boost",
         "type": "tuple"
       }
@@ -140,7 +138,56 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "id",
+        "name": "boostId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RemainingTokensWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "boostId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IBoost.Claim",
+        "name": "claim",
+        "type": "tuple"
+      }
+    ],
+    "name": "TokensClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "boostId",
         "type": "uint256"
       },
       {
@@ -156,20 +203,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BoostDeposited",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      }
-    ],
-    "name": "BoostWithdrawn",
+    "name": "TokensDeposited",
     "type": "event"
   },
   {
@@ -183,9 +217,9 @@
     "name": "boosts",
     "outputs": [
       {
-        "internalType": "bytes32",
-        "name": "ref",
-        "type": "bytes32"
+        "internalType": "string",
+        "name": "strategyURI",
+        "type": "string"
       },
       {
         "internalType": "address",
@@ -198,18 +232,18 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "amountPerAccount",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "guard",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "expires",
+        "name": "start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "end",
         "type": "uint256"
       },
       {
@@ -224,14 +258,26 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "boostId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IBoost.Claim",
+        "name": "claim",
+        "type": "tuple"
       },
       {
         "internalType": "bytes",
@@ -239,45 +285,9 @@
         "type": "bytes"
       }
     ],
-    "name": "claim",
+    "name": "claimTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "recipients",
-        "type": "address[]"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "signatures",
-        "type": "bytes[]"
-      }
-    ],
-    "name": "claimMulti",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimStructHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -307,37 +317,49 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "ref",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "tokenAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "depositAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountPerAccount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "guard",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "expires",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "strategyURI",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "guard",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IBoost.Boost",
+        "name": "boost",
+        "type": "tuple"
       }
     ],
-    "name": "create",
+    "name": "createBoost",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -346,7 +368,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "boostId",
         "type": "uint256"
       },
       {
@@ -355,9 +377,22 @@
         "type": "uint256"
       }
     ],
-    "name": "deposit",
+    "name": "depositTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "eip712ClaimStructHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -377,7 +412,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "boostId",
         "type": "uint256"
       },
       {
@@ -386,7 +421,7 @@
         "type": "address"
       }
     ],
-    "name": "withdraw",
+    "name": "withdrawRemainingTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

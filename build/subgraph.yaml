@@ -6,7 +6,7 @@ dataSources:
     name: Boost
     network: rinkeby
     source:
-      address: "0xc0528d60fad1bb18e6d487ef1633d9b91b856f4a"
+      address: "0x43bb93e5a36540d0b4321071a31b628fe48498f5"
       abi: Boost
       startBlock: 10738289
     mapping:
@@ -19,12 +19,12 @@ dataSources:
         - name: Boost
           file: Boost/abis/Boost.json
       eventHandlers:
-        - event: BoostClaimed(uint256,address)
-          handler: handleBoostClaimed
-        - event: BoostCreated(uint256,(bytes32,address,uint256,uint256,address,uint256,address))
+        - event: BoostCreated(uint256,(string,address,uint256,address,uint256,uint256,address))
           handler: handleBoostCreated
-        - event: BoostDeposited(uint256,address,uint256)
-          handler: handleBoostDeposited
-        - event: BoostWithdrawn(uint256)
-          handler: handleBoostWithdrawn
+        - event: TokensClaimed((uint256,address,uint256))
+          handler: handleTokensClaimed
+        - event: TokensDeposited(uint256,address,uint256)
+          handler: handleTokensDeposited
+        - event: RemainingTokensWithdrawn(uint256,uint256)
+          handler: handleRemainingTokensWithdrawn
       file: Boost/Boost.wasm
