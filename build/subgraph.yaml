@@ -6,7 +6,7 @@ dataSources:
     name: Boost
     network: rinkeby
     source:
-      address: "0x43bb93e5a36540d0b4321071a31b628fe48498f5"
+      address: "0xebdb154759f9d6d02a1930dd0a240aa66ddb962a"
       abi: Boost
       startBlock: 10738289
     mapping:
@@ -19,7 +19,7 @@ dataSources:
         - name: Boost
           file: Boost/abis/Boost.json
       eventHandlers:
-        - event: BoostCreated(uint256,(string,address,uint256,address,uint256,uint256,address))
+        - event: BoostCreated(uint256,(string,bytes32,address,uint256,address,uint256,uint256,address))
           handler: handleBoostCreated
         - event: TokensClaimed((uint256,address,uint256))
           handler: handleTokensClaimed

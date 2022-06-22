@@ -39,28 +39,32 @@ export class BoostCreatedBoostStruct extends ethereum.Tuple {
     return this[0].toString();
   }
 
+  get ref(): Bytes {
+    return this[1].toBytes();
+  }
+
   get token(): Address {
-    return this[1].toAddress();
+    return this[2].toAddress();
   }
 
   get balance(): BigInt {
-    return this[2].toBigInt();
+    return this[3].toBigInt();
   }
 
   get guard(): Address {
-    return this[3].toAddress();
+    return this[4].toAddress();
   }
 
   get start(): BigInt {
-    return this[4].toBigInt();
-  }
-
-  get end(): BigInt {
     return this[5].toBigInt();
   }
 
+  get end(): BigInt {
+    return this[6].toBigInt();
+  }
+
   get owner(): Address {
-    return this[6].toAddress();
+    return this[7].toAddress();
   }
 }
 
@@ -148,21 +152,23 @@ export class TokensDeposited__Params {
 
 export class Boost__boostsResult {
   value0: string;
-  value1: Address;
-  value2: BigInt;
-  value3: Address;
-  value4: BigInt;
+  value1: Bytes;
+  value2: Address;
+  value3: BigInt;
+  value4: Address;
   value5: BigInt;
-  value6: Address;
+  value6: BigInt;
+  value7: Address;
 
   constructor(
     value0: string,
-    value1: Address,
-    value2: BigInt,
-    value3: Address,
-    value4: BigInt,
+    value1: Bytes,
+    value2: Address,
+    value3: BigInt,
+    value4: Address,
     value5: BigInt,
-    value6: Address
+    value6: BigInt,
+    value7: Address
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -171,17 +177,19 @@ export class Boost__boostsResult {
     this.value4 = value4;
     this.value5 = value5;
     this.value6 = value6;
+    this.value7 = value7;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromString(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromAddress(this.value3));
-    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value1", ethereum.Value.fromFixedBytes(this.value1));
+    map.set("value2", ethereum.Value.fromAddress(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromAddress(this.value6));
+    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
     return map;
   }
 }
@@ -194,25 +202,26 @@ export class Boost extends ethereum.SmartContract {
   boosts(param0: BigInt): Boost__boostsResult {
     let result = super.call(
       "boosts",
-      "boosts(uint256):(string,address,uint256,address,uint256,uint256,address)",
+      "boosts(uint256):(string,bytes32,address,uint256,address,uint256,uint256,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
     return new Boost__boostsResult(
       result[0].toString(),
-      result[1].toAddress(),
-      result[2].toBigInt(),
-      result[3].toAddress(),
-      result[4].toBigInt(),
+      result[1].toBytes(),
+      result[2].toAddress(),
+      result[3].toBigInt(),
+      result[4].toAddress(),
       result[5].toBigInt(),
-      result[6].toAddress()
+      result[6].toBigInt(),
+      result[7].toAddress()
     );
   }
 
   try_boosts(param0: BigInt): ethereum.CallResult<Boost__boostsResult> {
     let result = super.tryCall(
       "boosts",
-      "boosts(uint256):(string,address,uint256,address,uint256,uint256,address)",
+      "boosts(uint256):(string,bytes32,address,uint256,address,uint256,uint256,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -222,12 +231,13 @@ export class Boost extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new Boost__boostsResult(
         value[0].toString(),
-        value[1].toAddress(),
-        value[2].toBigInt(),
-        value[3].toAddress(),
-        value[4].toBigInt(),
+        value[1].toBytes(),
+        value[2].toAddress(),
+        value[3].toBigInt(),
+        value[4].toAddress(),
         value[5].toBigInt(),
-        value[6].toAddress()
+        value[6].toBigInt(),
+        value[7].toAddress()
       )
     );
   }
@@ -379,28 +389,32 @@ export class CreateBoostCallBoostStruct extends ethereum.Tuple {
     return this[0].toString();
   }
 
+  get ref(): Bytes {
+    return this[1].toBytes();
+  }
+
   get token(): Address {
-    return this[1].toAddress();
+    return this[2].toAddress();
   }
 
   get balance(): BigInt {
-    return this[2].toBigInt();
+    return this[3].toBigInt();
   }
 
   get guard(): Address {
-    return this[3].toAddress();
+    return this[4].toAddress();
   }
 
   get start(): BigInt {
-    return this[4].toBigInt();
-  }
-
-  get end(): BigInt {
     return this[5].toBigInt();
   }
 
+  get end(): BigInt {
+    return this[6].toBigInt();
+  }
+
   get owner(): Address {
-    return this[6].toAddress();
+    return this[7].toAddress();
   }
 }
 

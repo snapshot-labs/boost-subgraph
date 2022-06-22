@@ -1,6 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  Boost as BoostContract,
   BoostCreated,
   TokensClaimed,
   TokensDeposited,
@@ -17,6 +16,7 @@ export function handleBoostCreated(event: BoostCreated): void {
   let boostEntity = new BoostEntity(boostId)
 
   boostEntity.strategyURI = event.params.boost.strategyURI
+  boostEntity.ref = event.params.boost.ref
   boostEntity.token = event.params.boost.token
   boostEntity.balance = event.params.boost.balance
   boostEntity.guard = event.params.boost.guard

@@ -17,6 +17,7 @@ type Claim @entity {
 type Boost @entity {
   id: ID!
   strategyURI: String!
+  ref: Bytes!
   token: Bytes!
   balance: BigInt!
   amountPerAccount: BigInt!
