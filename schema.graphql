@@ -20,7 +20,6 @@ type Boost @entity {
   ref: Bytes!
   token: Bytes!
   balance: BigInt!
-  amountPerAccount: BigInt!
   guard: Bytes!
   start: Int!
   end: Int!

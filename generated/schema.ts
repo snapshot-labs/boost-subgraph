@@ -214,15 +214,6 @@ export class Boost extends Entity {
     this.set("balance", Value.fromBigInt(value));
   }
 
-  get amountPerAccount(): BigInt {
-    let value = this.get("amountPerAccount");
-    return value!.toBigInt();
-  }
-
-  set amountPerAccount(value: BigInt) {
-    this.set("amountPerAccount", Value.fromBigInt(value));
-  }
-
   get guard(): Bytes {
     let value = this.get("guard");
     return value!.toBytes();
