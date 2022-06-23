@@ -6,7 +6,7 @@ dataSources:
     name: Boost
     network: rinkeby
     source:
-      address: "0xec5ba34cf4a473e0254f9d33ca532930755f9615"
+      address: "0xaf8b6af86044821eed74e49057de62fb5c48e061"
       abi: Boost
       startBlock: 10738289
     mapping:
