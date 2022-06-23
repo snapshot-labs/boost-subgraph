@@ -187,13 +187,13 @@ export class Boost extends Entity {
     this.set("strategyURI", Value.fromString(value));
   }
 
-  get ref(): Bytes {
+  get ref(): string {
     let value = this.get("ref");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set ref(value: Bytes) {
-    this.set("ref", Value.fromBytes(value));
+  set ref(value: string) {
+    this.set("ref", Value.fromString(value));
   }
 
   get token(): Bytes {
