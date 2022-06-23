@@ -19,7 +19,7 @@ dataSources:
         - name: Boost
           file: Boost/abis/Boost.json
       eventHandlers:
-        - event: BoostCreated(uint256,(string,bytes32,address,uint256,address,uint256,uint256,address))
+        - event: BoostCreated(uint256,(string,address,uint256,address,uint256,uint256,address))
           handler: handleBoostCreated
         - event: TokensClaimed((uint256,address,uint256))
           handler: handleTokensClaimed
