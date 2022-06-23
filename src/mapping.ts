@@ -1,4 +1,4 @@
-import { BigInt, JSONValue, Value, ipfs, json } from '@graphprotocol/graph-ts'
+import { BigInt, ipfs, json } from '@graphprotocol/graph-ts'
 import {
   BoostCreated,
   TokensClaimed,
@@ -8,44 +8,41 @@ import {
 import {
   Boost as BoostEntity,
   Deposit as DepositEntity,
-  Claim as ClaimEntity,
+  Claim as ClaimEntity
 } from "../generated/schema"
 
 export function handleBoostCreated(event: BoostCreated): void {
   const boostId = event.params.boostId.toHex()
-  let boostEntity = new BoostEntity(boostId)
+  const boostEntity = new BoostEntity(boostId)
 
   boostEntity.strategyURI = event.params.boost.strategyURI
 
   const strategyData = ipfs.cat(boostEntity.strategyURI)
 
-  if (strategyData !== null) {
-    const value = json.try_fromBytes(strategyData)
-    const obj = value.value.toObject()
-    const params = obj.get('params')
+  if (strategyData === null) return
 
-    if (params !== null) {
-      const ref = params.toObject().get('proposal') // needs renaming
-      if (ref !== null) {
-        boostEntity.ref = ref.toString()
-        boostEntity.token = event.params.boost.token
-        boostEntity.balance = event.params.boost.balance
-        boostEntity.guard = event.params.boost.guard
-        boostEntity.start = event.params.boost.start.toI32()
-        boostEntity.end = event.params.boost.end.toI32()
-        boostEntity.owner = event.params.boost.owner
-        boostEntity.blockNumber = event.block.number
-        boostEntity.save()
-      
-        let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
-        depositEntity.boost = boostId
-        depositEntity.sender = event.params.boost.owner
-        depositEntity.amount = event.params.boost.balance
-        depositEntity.blockNumber = event.block.number
-        depositEntity.save()
-      }
-    }
-  }
+  const value = json.try_fromBytes(strategyData)
+  const obj = value.value.toObject()
+  const tag = obj.get('tag')
+
+  if (tag === null) return
+
+  boostEntity.tag = tag.toString()
+  boostEntity.token = event.params.boost.token
+  boostEntity.balance = event.params.boost.balance
+  boostEntity.guard = event.params.boost.guard
+  boostEntity.start = event.params.boost.start.toI32()
+  boostEntity.end = event.params.boost.end.toI32()
+  boostEntity.owner = event.params.boost.owner
+  boostEntity.blockNumber = event.block.number
+  boostEntity.save()
+
+  let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
+  depositEntity.boost = boostId
+  depositEntity.sender = event.params.boost.owner
+  depositEntity.amount = event.params.boost.balance
+  depositEntity.blockNumber = event.block.number
+  depositEntity.save()
 }
 
 export function handleTokensClaimed(event: TokensClaimed): void {
