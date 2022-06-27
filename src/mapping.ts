@@ -5,15 +5,19 @@ import {
   TokensDeposited,
   RemainingTokensWithdrawn
 } from "../generated/Boost/Boost"
+import { ERC20 } from "../generated/Boost/ERC20"
 import {
   Boost as BoostEntity,
   Deposit as DepositEntity,
-  Claim as ClaimEntity
+  Claim as ClaimEntity,
+  Token as TokenEntity
 } from "../generated/schema"
 
 export function handleBoostCreated(event: BoostCreated): void {
   const boostId = event.params.boostId.toHex()
   const boostEntity = new BoostEntity(boostId)
+  const tokenAddress = event.params.boost.token
+  const tokenId = tokenAddress.toHexString()
 
   boostEntity.strategyURI = event.params.boost.strategyURI
 
@@ -27,8 +31,18 @@ export function handleBoostCreated(event: BoostCreated): void {
 
   if (tag === null) return
 
+  let token = TokenEntity.load(tokenId)
+  if (token === null) {
+    const tokenContract = ERC20.bind(tokenAddress)
+    token = new TokenEntity(tokenId)
+    token.name = tokenContract.name()
+    token.symbol = tokenContract.symbol()
+    token.decimals = tokenContract.decimals()
+    token.save()
+  }
+
   boostEntity.tag = tag.toString()
-  boostEntity.token = event.params.boost.token
+  boostEntity.token = tokenId
   boostEntity.balance = event.params.boost.balance
   boostEntity.guard = event.params.boost.guard
   boostEntity.start = event.params.boost.start.toI32()

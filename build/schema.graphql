@@ -1,3 +1,10 @@
+type Token @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: BigInt!
+}
+
 type Deposit @entity {
   id: ID!
   boost: Boost!
@@ -18,7 +25,7 @@ type Boost @entity {
   id: ID!
   strategyURI: String!
   tag: String!
-  token: Bytes!
+  token: Token!
   balance: BigInt!
   guard: Bytes!
   start: Int!

@@ -18,6 +18,8 @@ dataSources:
       abis:
         - name: Boost
           file: Boost/abis/Boost.json
+        - name: ERC20
+          file: Boost/abis/ERC20.json
       eventHandlers:
         - event: BoostCreated(uint256,(string,address,uint256,address,uint256,uint256,address))
           handler: handleBoostCreated
