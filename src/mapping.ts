@@ -14,7 +14,7 @@ import {
 } from "../generated/schema"
 
 export function handleBoostCreated(event: BoostCreated): void {
-  const boostId = event.params.boostId.toHex()
+  const boostId = event.params.boostId.toString()
   const boostEntity = new BoostEntity(boostId)
   const tokenAddress = event.params.boost.token
   const tokenId = tokenAddress.toHexString()
@@ -60,7 +60,7 @@ export function handleBoostCreated(event: BoostCreated): void {
 }
 
 export function handleTokensClaimed(event: TokensClaimed): void {
-  const boostId = event.params.claim.boostId.toHex()
+  const boostId = event.params.claim.boostId.toString()
 
   let claimEntity = new ClaimEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
   claimEntity.boost = boostId
@@ -77,7 +77,7 @@ export function handleTokensClaimed(event: TokensClaimed): void {
 }
 
 export function handleTokensDeposited(event: TokensDeposited): void {
-  const boostId = event.params.boostId.toHex()
+  const boostId = event.params.boostId.toString()
   
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
   depositEntity.boost = boostId
@@ -93,7 +93,7 @@ export function handleTokensDeposited(event: TokensDeposited): void {
 }
 
 export function handleRemainingTokensWithdrawn(event: RemainingTokensWithdrawn): void {
-  let boostEntity = BoostEntity.load(event.params.boostId.toHex())
+  let boostEntity = BoostEntity.load(event.params.boostId.toString())
   if (boostEntity != null) {
     boostEntity.balance = BigInt.fromString("0")
     boostEntity.save()
