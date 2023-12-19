@@ -1,0 +1,57 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: boost
+    network: sepolia
+    source:
+      address: "0x3ef426688D6eF5ca47b4414B9f67E9E582dFc4d3"
+      abi: boost
+      startBlock: 4916575
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - Burn
+        - Claim
+        - Deposit
+        - EthFeeSet
+        - EthFeesCollected
+        - Mint
+        - OwnershipTransferred
+        - TokenFeeSet
+        - TokenFeesCollected
+        - Transfer
+      abis:
+        - name: boost
+          file: ./abis/boost.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: Burn(uint256)
+          handler: handleBurn
+        - event: Claim((uint256,address,uint256,bytes32))
+          handler: handleClaim
+        - event: Deposit(uint256,address,uint256)
+          handler: handleDeposit
+        - event: EthFeeSet(uint256)
+          handler: handleEthFeeSet
+        - event: EthFeesCollected(address)
+          handler: handleEthFeesCollected
+        - event: Mint(uint256,(address,uint256,address,uint48,uint48))
+          handler: handleMint
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: TokenFeeSet(uint256)
+          handler: handleTokenFeeSet
+        - event: TokenFeesCollected(address,address)
+          handler: handleTokenFeesCollected
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/boost.ts

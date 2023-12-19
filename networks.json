@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "boost": {
+      "address": "0x3ef426688D6eF5ca47b4414B9f67E9E582dFc4d3",
+      "startBlock": 4916575
+    }
+  }
+}
