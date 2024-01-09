@@ -1,113 +1,73 @@
-type Approval @entity(immutable: true) {
+type ProposalStrategy @entity(immutable: true) {
   id: Bytes!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  name: String!
+  params: ProposalParams!
 }
 
-type ApprovalForAll @entity(immutable: true) {
+type ProposalParams @entity(immutable: true) {
   id: Bytes!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  version: String!
+  proposal: String!
+  eligibility: Eligibility!
+  distribution: Distribution!
 }
 
-type Burn @entity(immutable: true) {
+type Eligibility @entity(immutable: true) {
   id: Bytes!
-  boostId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  type: String!
+  choice: Int
 }
 
-type Claim @entity(immutable: true) {
+type Distribution @entity(immutable: true) {
   id: Bytes!
-  claim_boostId: BigInt! # uint256
-  claim_recipient: Bytes! # address
-  claim_amount: BigInt! # uint256
-  claim_ref: Bytes! # bytes32
+  type: String!
+}
+
+type Boost @entity {
+  blockNumber: BigInt!
+  id: String!
+  chainId: String!
+  isBurnt: Boolean!
+  strategyURI: String!
+  token: Token!
+  poolSize: String!
+  guard: Bytes!
+  start: Int!
+  end: Int!
+  owner: Bytes!
+  strategy: ProposalStrategy!
+  deposits: [Deposit!] @derivedFrom(field: "boost")
+  claims: [Claim!] @derivedFrom(field: "boost")
+}
+
+type Proposal @entity {
+  id: String!
+  boosts: [Boost!]!
+}
+
+type Claim @entity {
+  id: String!
+  boost: Boost!
+  recipient: Bytes!
+  amount: BigInt!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  transactionHash: Bytes! 
 }
 
 type Deposit @entity(immutable: true) {
-  id: Bytes!
-  boostId: BigInt! # uint256
-  sender: Bytes! # address
-  amount: BigInt! # uint256
+  id: String!
+  boost: Boost!
+  sender: Bytes!
+  amount: String!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  transactionHash: Bytes! 
 }
 
-type EthFeeSet @entity(immutable: true) {
-  id: Bytes!
-  ethFee: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type EthFeesCollected @entity(immutable: true) {
-  id: Bytes!
-  recipient: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Mint @entity(immutable: true) {
-  id: Bytes!
-  boostId: BigInt! # uint256
-  boost_token: Bytes! # address
-  boost_balance: BigInt! # uint256
-  boost_guard: Bytes! # address
-  boost_start: BigInt! # uint48
-  boost_end: BigInt! # uint48
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TokenFeeSet @entity(immutable: true) {
-  id: Bytes!
-  tokenFee: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TokenFeesCollected @entity(immutable: true) {
-  id: Bytes!
-  token: Bytes! # address
-  recipient: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Token @entity {
+  id: String!
+  name: String!
+  symbol: String!
+  decimals: String!
 }
