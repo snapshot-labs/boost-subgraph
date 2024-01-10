@@ -27,7 +27,6 @@ type Boost @entity {
   blockNumber: BigInt!
   id: String!
   chainId: String!
-  isBurnt: Boolean!
   strategyURI: String!
   token: Token!
   poolSize: String!
