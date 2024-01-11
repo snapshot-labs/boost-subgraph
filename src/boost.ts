@@ -22,16 +22,6 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts";
 
-export function handleBurn(event: BurnEvent): void {
-  let boostEntity = BoostEntity.load(event.params.boostId.toHexString())
-  if (boostEntity == null) {
-    log.error("failed to load boost entity", [event.params.boostId.toHexString()])
-    return;
-  }
-  boostEntity.isBurnt = true
-  boostEntity.save()
-}
-
 export function handleClaim(event: ClaimEvent): void {
   let boostId = event.params.claim.boostId.toHexString()
 
@@ -206,7 +196,6 @@ export function handleMint(event: MintEvent): void {
 
   const boostEntity = new BoostEntity(boostId.toString())
   boostEntity.strategyURI = event.params.strategyURI
-  boostEntity.isBurnt = false
   boostEntity.strategy = strategy.id;
   boostEntity.chainId = "11155111"
   boostEntity.token = tokenAddress
