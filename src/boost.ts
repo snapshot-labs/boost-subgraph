@@ -107,6 +107,17 @@ export function handleMint(event: MintEvent): void {
     return
   }
 
+  let proposalEntity = ProposalEntity.load(proposalParams.proposal);
+  if (proposalEntity == null) {
+    proposalEntity = new ProposalEntity(proposalParams.proposal);
+    proposalEntity.boosts = [boostId.toString()];
+  } else {
+    let boosts = proposalEntity.boosts;
+    boosts.push(boostId.toString());
+    proposalEntity.boosts = boosts;
+  }
+  proposalEntity.save();
+
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
   depositEntity.boost = boostId.toString()
   depositEntity.sender = event.transaction.from
