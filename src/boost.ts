@@ -82,12 +82,16 @@ function createEligibilityEntity(event: MintEvent, params: TypedMap<string, JSON
   } else {
     eligibility.type = maybeEligiblityType.toString();
     if (eligibility.type == "bribe") {
-      let maybeChoice = params.get('choice');
-      if (maybeChoice == null ) return null;
+      let maybeChoice = eli.get("choice");
+      if (maybeChoice == null ) {
+        log.error("keyword 'choice' not found", []);
+        return null
+      };
       eligibility.choice = maybeChoice.toBigInt().toI32();
-    } else if (eligibility.type != "incentive") {
+    } else if (eligibility.type == "incentive") {
+      // do nothing
+    } else {
       log.error("unknown eligibility type", []);
-      return null;
     }
   }
 
@@ -218,7 +222,9 @@ export function handleMint(event: MintEvent): void {
     proposalEntity = new ProposalEntity(proposalParams.proposal);
     proposalEntity.boosts = [boostId.toString()];
   } else {
-    proposalEntity.boosts.push(boostId.toString());
+    let boosts = proposalEntity.boosts;
+    boosts.push(boostId.toString());
+    proposalEntity.boosts = boosts;
   }
   proposalEntity.save();
 
