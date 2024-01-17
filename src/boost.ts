@@ -92,6 +92,7 @@ function createEligibilityEntity(event: MintEvent, params: TypedMap<string, JSON
       // do nothing
     } else {
       log.error("unknown eligibility type", []);
+      return null
     }
   }
 
