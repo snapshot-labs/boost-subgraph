@@ -1,11 +1,6 @@
 type ProposalStrategy @entity(immutable: true) {
   id: String!
   name: String!
-  params: ProposalParam!
-}
-
-type ProposalParam @entity(immutable: true) {
-  id: String!
   version: String!
   proposal: String!
   eligibility: Eligibility!

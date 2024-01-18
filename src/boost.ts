@@ -10,7 +10,6 @@ import {
   Boost as BoostEntity,
   Claim as ClaimEntity,
   Deposit as DepositEntity,
-  ProposalParam as ProposalParamEntity,
   Proposal as ProposalEntity,
   Token as TokenEntity,
   ProposalStrategy as ProposalStrategyEntity
@@ -94,29 +93,6 @@ export function handleMint(event: MintEvent): void {
   boostEntity.owner = event.params.owner
   boostEntity.blockNumber = event.block.number
   boostEntity.save()
-
-  const proposalStrategy = ProposalStrategyEntity.load(event.params.strategyURI);
-  if (proposalStrategy == null) {
-    log.error("proposalStrategy is null", []);
-    return
-  }
-
-  const proposalParams = ProposalParamEntity.load(event.params.strategyURI);
-  if (proposalParams == null) {
-    log.error("proposalParams is null", []);
-    return
-  }
-
-  let proposalEntity = ProposalEntity.load(proposalParams.proposal);
-  if (proposalEntity == null) {
-    proposalEntity = new ProposalEntity(proposalParams.proposal);
-    proposalEntity.boosts = [boostId.toString()];
-  } else {
-    let boosts = proposalEntity.boosts;
-    boosts.push(boostId.toString());
-    proposalEntity.boosts = boosts;
-  }
-  proposalEntity.save();
 
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
   depositEntity.boost = boostId.toString()

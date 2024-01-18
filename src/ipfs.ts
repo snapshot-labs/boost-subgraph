@@ -1,7 +1,6 @@
 import {
     Distribution as DistributionEntity,
     Eligibility as EligibilityEntity,
-    ProposalParam as ProposalParamEntity,
     ProposalStrategy as ProposalStrategyEntity
 } from "../generated/schema"
 import { JSONValue, TypedMap, dataSource, log } from '@graphprotocol/graph-ts'
@@ -54,28 +53,7 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
   return distribution;
 }
 
-function createProposalParamEntity(params: TypedMap<string, JSONValue>): ProposalParamEntity | null {
-  let proposalParams = new ProposalParamEntity(dataSource.stringParam());
 
-  let maybeVersion = params.get('version');
-  if (maybeVersion == null) return null;
-  proposalParams.version = maybeVersion.toString();
-
-  let maybeProposal = params.get('proposal');
-  if (maybeProposal == null) return null;
-  proposalParams.proposal = maybeProposal.toString();
-
-  let eligibility = createEligibilityEntity(params);
-  if (eligibility == null) return null;
-  proposalParams.eligibility = eligibility.id;
-  
-  let distribution = createDistributionEntity(params);
-  if (distribution == null) return null;
-  proposalParams.distribution = distribution.id;
-
-  proposalParams.save();
-  return proposalParams;
-}
 
 export function handleStrategyMetadata(content: Bytes): void {
     let obj = json.fromBytes(content).toObject();
@@ -98,11 +76,23 @@ export function handleStrategyMetadata(content: Bytes): void {
           return;
         }
 
-        let proposalParams = createProposalParamEntity(params);
-        if (proposalParams == null) return;
+        let maybeVersion = params.get('version');
+        if (maybeVersion == null) return;
+        strat.version = maybeVersion.toString();
+
+        let maybeProposal = params.get('proposal');
+        if (maybeProposal == null) return;
+        strat.proposal = maybeProposal.toString();
+
+        let eligibility = createEligibilityEntity(params);
+        if (eligibility == null) return;
+        strat.eligibility = eligibility.id;
+  
+        let distribution = createDistributionEntity(params);
+        if (distribution == null) return;
+        strat.distribution = distribution.id;
 
         strat.name = name;
-        strat.params = proposalParams.id;
     } else {
         log.error("failed to fetch content or parse json", []);
     }
