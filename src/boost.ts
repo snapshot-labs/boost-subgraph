@@ -206,8 +206,8 @@ export function handleMint(event: MintEvent): void {
   boostEntity.token = tokenAddress
   boostEntity.poolSize = event.params.boost.balance.toString()
   boostEntity.guard = event.params.boost.guard
-  boostEntity.start = event.params.boost.start.toI32()
-  boostEntity.end = event.params.boost.end.toI32()
+  boostEntity.start = event.params.boost.start.toString()
+  boostEntity.end = event.params.boost.end.toString()
   boostEntity.owner = event.params.owner
   boostEntity.blockNumber = event.block.number
   boostEntity.save()

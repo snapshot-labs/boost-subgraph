@@ -31,8 +31,8 @@ type Boost @entity {
   token: Token!
   poolSize: String!
   guard: Bytes!
-  start: Int!
-  end: Int!
+  start: String!
+  end: String!
   owner: Bytes!
   strategy: ProposalStrategy!
   deposits: [Deposit!] @derivedFrom(field: "boost")
