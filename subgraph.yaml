@@ -32,3 +32,18 @@ dataSources:
         - event: Mint(uint256,address,(address,uint256,address,uint48,uint48),string)
           handler: handleMint
       file: ./src/boost.ts
+templates:
+  - name: StrategyMetadata
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfs.ts
+      handler: handleStrategyMetadata
+      entities:
+        - Eligibility
+        - ProposalStrategy
+        - Distribution
+      abis:
+        - name: boost
+          file: ./abis/boost.json

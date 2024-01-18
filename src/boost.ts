@@ -1,24 +1,22 @@
 import {
-  Burn as BurnEvent,
   Claim as ClaimEvent,
   Deposit as DepositEvent,
   Mint as MintEvent,
-} from "../generated/boost/boost"
+} from "../generated/boost/boost";
+import {
+  StrategyMetadata as StrategyMetadataTemplate,
+} from "../generated/templates";
 import {
   Boost as BoostEntity,
   Claim as ClaimEntity,
   Deposit as DepositEntity,
-  Distribution as DistributionEntity,
-  Eligibility as EligibilityEntity,
-  ProposalParams as ProposalParamsEntity,
   Proposal as ProposalEntity,
   Token as TokenEntity,
   ProposalStrategy as ProposalStrategyEntity
 } from "../generated/schema"
 import { erc20 } from "../generated/boost/ERC20"
-import { JSONValue, TypedMap, log } from '@graphprotocol/graph-ts'
+import { log } from '@graphprotocol/graph-ts'
 import {
-  ipfs, json,
   BigInt,
 } from "@graphprotocol/graph-ts";
 
@@ -67,111 +65,6 @@ export function handleDeposit(event: DepositEvent): void {
   entity.save()
 }
 
-function createEligibilityEntity(event: MintEvent, params: TypedMap<string, JSONValue>): EligibilityEntity | null {
-  let eligibility = new EligibilityEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-
-  let maybeEli = params.get('eligibility');
-  if (maybeEli == null) return null;
-  let eli = maybeEli.toObject();
-
-  let maybeEligiblityType = eli.get('type');
-  if (maybeEligiblityType == null) {
-    eligibility.type = "incentive";
-  } else {
-    eligibility.type = maybeEligiblityType.toString();
-    if (eligibility.type == "bribe") {
-      let maybeChoice = eli.get("choice");
-      if (maybeChoice == null ) {
-        log.error("keyword 'choice' not found", []);
-        return null
-      };
-      eligibility.choice = maybeChoice.toBigInt().toI32();
-    } else if (eligibility.type == "incentive") {
-      // do nothing
-    } else {
-      log.error("unknown eligibility type", []);
-      return null
-    }
-  }
-
-  eligibility.save();
-  return eligibility
-}
-
-function createDistributionEntity(event: MintEvent, params: TypedMap<string, JSONValue>): DistributionEntity | null {
-  let distribution = new DistributionEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  let maybeDistrib = params.get('distribution');
-  if (maybeDistrib == null) return null;
-  let distrib = maybeDistrib.toObject();
-  let maybeDistributionType = distrib.get('type');
-  if (maybeDistributionType == null) return null;
-  distribution.type = maybeDistributionType.toString();
-
-  distribution.save();
-  return distribution;
-}
-
-function createProposalParamsEntity(event: MintEvent, params: TypedMap<string, JSONValue>): ProposalParamsEntity | null {
-  let proposalParams = new ProposalParamsEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-
-  let maybeVersion = params.get('version');
-  if (maybeVersion == null) return null;
-  proposalParams.version = maybeVersion.toString();
-
-  let maybeProposal = params.get('proposal');
-  if (maybeProposal == null) return null;
-  proposalParams.proposal = maybeProposal.toString();
-
-  let eligibility = createEligibilityEntity(event, params);
-  if (eligibility == null) return null;
-  proposalParams.eligibility = eligibility.id;
-  
-  let distribution = createDistributionEntity(event, params);
-  if (distribution == null) return null;
-  proposalParams.distribution = distribution.id;
-
-  proposalParams.save();
-  return proposalParams;
-}
-
-function createStrategyEntity(event: MintEvent, obj: TypedMap<string, JSONValue>): ProposalStrategyEntity | null {
-  let strategy = obj.get('name');
-  let maybeParams = obj.get('params');
-  if (maybeParams == null) return null;
-  let params = maybeParams.toObject();
-
-  let name: string;
-
-  if (strategy === null) {
-    log.error("strategy is null", []);
-    return null;
-  }
-  name = strategy.toString();
-
-  if (params == null) {
-    log.error("params is null", []);
-    return null
-  }
-
-  let proposalParams = createProposalParamsEntity(event, params);
-  if (proposalParams == null) return null;
-
-  let strat = new ProposalStrategyEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  strat.name = name;
-  strat.params = proposalParams.id;
-
-  strat.save();
-  return strat
-}
-
 export function handleMint(event: MintEvent): void {
   const boostId = event.params.boostId
   const tokenAddress = event.params.boost.token.toHexString()
@@ -186,48 +79,20 @@ export function handleMint(event: MintEvent): void {
     token.save()
   }
 
-  const strategyData = ipfs.cat(event.params.strategyURI)
-
-  if (strategyData === null) {
-    log.error("data is null", []);
-    return
-  }
-
-  const value = json.try_fromBytes(strategyData)
-  const obj = value.value.toObject()
-
-  const strategy = createStrategyEntity(event, obj);
-  if (strategy == null) return;
+  StrategyMetadataTemplate.create(event.params.strategyURI);
 
   const boostEntity = new BoostEntity(boostId.toString())
   boostEntity.strategyURI = event.params.strategyURI
-  boostEntity.strategy = strategy.id;
+  boostEntity.strategy = event.params.strategyURI
   boostEntity.chainId = "11155111"
   boostEntity.token = tokenAddress
   boostEntity.poolSize = event.params.boost.balance.toString()
   boostEntity.guard = event.params.boost.guard
-  boostEntity.start = event.params.boost.start.toI32()
-  boostEntity.end = event.params.boost.end.toI32()
+  boostEntity.start = event.params.boost.start.toString()
+  boostEntity.end = event.params.boost.end.toString()
   boostEntity.owner = event.params.owner
   boostEntity.blockNumber = event.block.number
   boostEntity.save()
-
-  const proposalParams = ProposalParamsEntity.load(strategy.params)
-  if (proposalParams == null) {
-    log.error("proposalParams is null", []);
-    return
-  }
-
-  let proposalEntity = ProposalEntity.load(proposalParams.proposal);
-  if (proposalEntity == null) {
-    proposalEntity = new ProposalEntity(proposalParams.proposal);
-    proposalEntity.boosts = [boostId.toString()];
-  } else {
-    let boosts = proposalEntity.boosts;
-    boosts.push(boostId.toString());
-    proposalEntity.boosts = boosts;
-  }
-  proposalEntity.save();
 
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
   depositEntity.boost = boostId.toString()

@@ -1,11 +1,6 @@
 type ProposalStrategy @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   name: String!
-  params: ProposalParams!
-}
-
-type ProposalParams @entity(immutable: true) {
-  id: Bytes!
   version: String!
   proposal: String!
   eligibility: Eligibility!
@@ -13,13 +8,13 @@ type ProposalParams @entity(immutable: true) {
 }
 
 type Eligibility @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   type: String!
   choice: Int
 }
 
 type Distribution @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   type: String!
 }
 
@@ -31,10 +26,10 @@ type Boost @entity {
   token: Token!
   poolSize: String!
   guard: Bytes!
-  start: Int!
-  end: Int!
+  start: String!
+  end: String!
   owner: Bytes!
-  strategy: ProposalStrategy!
+  strategy: ProposalStrategy
   deposits: [Deposit!] @derivedFrom(field: "boost")
   claims: [Claim!] @derivedFrom(field: "boost")
 }
