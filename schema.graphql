@@ -16,6 +16,7 @@ type Eligibility @entity(immutable: true) {
 type Distribution @entity(immutable: true) {
   id: String!
   type: String!
+  limit: String
 }
 
 type Boost @entity {

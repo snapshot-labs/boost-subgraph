@@ -45,9 +45,17 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
   let maybeDistrib = params.get('distribution');
   if (maybeDistrib == null) return null;
   let distrib = maybeDistrib.toObject();
+
   let maybeDistributionType = distrib.get('type');
   if (maybeDistributionType == null) return null;
   distribution.type = maybeDistributionType.toString();
+
+  if (distribution.type == 'weighted') {
+    let maybeDistributionLimit = distrib.get('limit');
+    if (maybeDistributionLimit != null) {
+      distribution.limit = maybeDistributionLimit.toString();
+    }
+  }
 
   distribution.save();
   return distribution;
