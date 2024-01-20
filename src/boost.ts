@@ -28,6 +28,16 @@ export function handleClaim(event: ClaimEvent): void {
   )
 
   entity.recipient = event.params.claim.recipient
+  let boost = BoostEntity.load(boostId)
+  if (boost !== null) {
+    let maybeStrategy = boost.strategy;
+    if (maybeStrategy !== null) {
+      let strategy = ProposalStrategyEntity.load(maybeStrategy);
+      if (strategy !== null) {
+        entity.proposal = strategy.proposal;
+      }
+    }
+  }
   entity.amount = event.params.claim.amount
   entity.boost = boostId
   entity.blockNumber = event.block.number
