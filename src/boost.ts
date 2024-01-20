@@ -2,6 +2,7 @@ import {
   Claim as ClaimEvent,
   Deposit as DepositEvent,
   Mint as MintEvent,
+  Burn as BurnEvent,
 } from "../generated/boost/boost";
 import {
   StrategyMetadata as StrategyMetadataTemplate,
@@ -20,6 +21,16 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts";
 
+export function handleBurn(event: BurnEvent): void {
+  let boostId = event.params.boostId.toHexString()
+
+  let boost = BoostEntity.load(boostId)
+  if (boost !== null) {
+    boost.currentBalance = "0";
+    boost.save()
+  }
+}
+
 export function handleClaim(event: ClaimEvent): void {
   let boostId = event.params.claim.boostId.toHexString()
 
@@ -28,8 +39,21 @@ export function handleClaim(event: ClaimEvent): void {
   )
 
   entity.recipient = event.params.claim.recipient
+  entity.amount = event.params.claim.amount
+  entity.boost = boostId
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
   let boost = BoostEntity.load(boostId)
   if (boost !== null) {
+    // Update currentBalance
+    let balance = BigInt.fromString(boost.currentBalance);
+    balance = balance.minus(event.params.claim.amount);
+    boost.currentBalance = balance.toString();
+    boost.save();
+
+    // Try to fetch the proposal
     let maybeStrategy = boost.strategy;
     if (maybeStrategy !== null) {
       let strategy = ProposalStrategyEntity.load(maybeStrategy);
@@ -38,11 +62,7 @@ export function handleClaim(event: ClaimEvent): void {
       }
     }
   }
-  entity.amount = event.params.claim.amount
-  entity.boost = boostId
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+
 
   entity.save()
 }
@@ -66,6 +86,7 @@ export function handleDeposit(event: DepositEvent): void {
   let prev = BigInt.fromString(boostEntity.poolSize.toString());
   let poolSize = prev.plus(event.params.amount);
   boostEntity.poolSize = poolSize.toString();
+  boostEntity.currentBalance = boostEntity.poolSize;
   boostEntity.save();
 
   entity.blockNumber = event.block.number
@@ -97,6 +118,7 @@ export function handleMint(event: MintEvent): void {
   boostEntity.chainId = "11155111"
   boostEntity.token = tokenAddress
   boostEntity.poolSize = event.params.boost.balance.toString()
+  boostEntity.currentBalance = boostEntity.poolSize;
   boostEntity.guard = event.params.boost.guard
   boostEntity.start = event.params.boost.start.toString()
   boostEntity.end = event.params.boost.end.toString()

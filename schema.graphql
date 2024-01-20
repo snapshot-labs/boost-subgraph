@@ -26,6 +26,7 @@ type Boost @entity {
   strategyURI: String!
   token: Token!
   poolSize: String!
+  currentBalance: String!
   guard: Bytes!
   start: String!
   end: String!

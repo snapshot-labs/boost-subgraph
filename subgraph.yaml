@@ -31,6 +31,8 @@ dataSources:
           handler: handleDeposit
         - event: Mint(uint256,address,(address,uint256,address,uint48,uint48),string)
           handler: handleMint
+        - event: Burn(uint256)
+          handler: handleBurn
       file: ./src/boost.ts
 templates:
   - name: StrategyMetadata
