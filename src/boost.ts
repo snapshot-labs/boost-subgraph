@@ -92,6 +92,7 @@ export function handleMint(event: MintEvent): void {
   boostEntity.end = event.params.boost.end.toString()
   boostEntity.owner = event.params.owner
   boostEntity.blockNumber = event.block.number
+  boostEntity.transaction = event.transaction.hash
   boostEntity.save()
 
   let depositEntity = new DepositEntity(event.transaction.hash.toHex() + "-" + event.logIndex.toString())
