@@ -22,20 +22,22 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export function handleBurn(event: BurnEvent): void {
-  let boostId = event.params.boostId.toHexString()
+  let boostId = event.params.boostId.toString()
 
   let boost = BoostEntity.load(boostId)
   if (boost !== null) {
     boost.currentBalance = "0";
     boost.save()
+  } else {
+    log.error("burn: boost is null", [boostId]);
   }
 }
 
 export function handleClaim(event: ClaimEvent): void {
-  let boostId = event.params.claim.boostId.toHexString()
+  let boostId = event.params.claim.boostId.toString()
 
   let entity = new ClaimEntity(
-    boostId + "." + event.params.claim.recipient.toHexString()
+    event.transaction.hash.toString()
   )
 
   entity.recipient = event.params.claim.recipient
@@ -56,11 +58,15 @@ export function handleClaim(event: ClaimEvent): void {
     // Try to fetch the proposal
     let maybeStrategy = boost.strategy;
     if (maybeStrategy !== null) {
+      log.error("strategy is null", [boostId])
       let strategy = ProposalStrategyEntity.load(maybeStrategy);
       if (strategy !== null) {
+        log.error("strategy is null 2", [boostId])
         entity.proposal = strategy.proposal;
       }
     }
+  } else {
+    log.error("boost is null", [boostId])
   }
 
 
