@@ -37,7 +37,7 @@ export function handleClaim(event: ClaimEvent): void {
   let boostId = event.params.claim.boostId.toString()
 
   let entity = new ClaimEntity(
-    event.transaction.hash.toString()
+    event.transaction.hash.concatI32(event.logIndex.toI32())
   )
 
   entity.recipient = event.params.claim.recipient
@@ -75,7 +75,7 @@ export function handleClaim(event: ClaimEvent): void {
 
 export function handleDeposit(event: DepositEvent): void {
   let entity = new DepositEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32()).toString() // TODO
+    event.transaction.hash.concatI32(event.logIndex.toI32()).toString()
   )
 
   let boostId = event.params.boostId.toHexString()

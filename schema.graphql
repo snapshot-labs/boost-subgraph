@@ -43,7 +43,7 @@ type Proposal @entity {
 }
 
 type Claim @entity {
-  id: String!
+  id: Bytes!
   proposal: String
   boost: Boost!
   recipient: Bytes!

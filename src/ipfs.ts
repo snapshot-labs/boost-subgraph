@@ -61,8 +61,6 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
   return distribution;
 }
 
-
-
 export function handleStrategyMetadata(content: Bytes): void {
     let obj = json.fromBytes(content).toObject();
     let strat = new ProposalStrategyEntity(dataSource.stringParam())
