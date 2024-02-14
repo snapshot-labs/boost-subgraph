@@ -10,13 +10,14 @@ type ProposalStrategy @entity(immutable: true) {
 type Eligibility @entity(immutable: true) {
   id: String!
   type: String!
-  choice: Int
+  choice: String
 }
 
 type Distribution @entity(immutable: true) {
   id: String!
   type: String!
   limit: String
+  numWinners: String
 }
 
 type Boost @entity {

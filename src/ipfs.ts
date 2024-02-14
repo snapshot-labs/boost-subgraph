@@ -6,7 +6,8 @@ import {
 import { JSONValue, TypedMap, dataSource, log } from '@graphprotocol/graph-ts'
 import {
     json,
-    Bytes
+    Bytes,
+    BigInt,
 } from "@graphprotocol/graph-ts";
 
 function createEligibilityEntity(params: TypedMap<string, JSONValue>): EligibilityEntity | null {
@@ -27,7 +28,7 @@ function createEligibilityEntity(params: TypedMap<string, JSONValue>): Eligibili
         log.error("keyword 'choice' not found", []);
         return null
       };
-      eligibility.choice = maybeChoice.toBigInt().toI32();
+      eligibility.choice = maybeChoice.toString();
     } else if (eligibility.type == "incentive") {
       // do nothing
     } else {
@@ -52,8 +53,13 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
 
   if (distribution.type == 'weighted') {
     let maybeDistributionLimit = distrib.get('limit');
-    if (maybeDistributionLimit != null) {
+    if (maybeDistributionLimit !== null) {
       distribution.limit = maybeDistributionLimit.toString();
+    }
+  } else if (distribution.type == 'lottery') {
+    let maybeNumWinners = distrib.get('numWinners');
+    if (maybeNumWinners !== null) {
+      distribution.numWinners = maybeNumWinners.toString();
     }
   }
 
@@ -65,14 +71,12 @@ export function handleStrategyMetadata(content: Bytes): void {
     let obj = json.fromBytes(content).toObject();
     let strat = new ProposalStrategyEntity(dataSource.stringParam())
     if (obj) {
-        let strategy = obj.get('name');
-
-        let name: string;
-        if (strategy === null) {
+        let maybeName = obj.get('strategyName');
+        if (maybeName == null) {
           log.error("strategy is null", []);
           return;
         }
-        name = strategy.toString();
+        let name = maybeName.toString();
 
         let maybeParams = obj.get('params');
         if (maybeParams == null) return;

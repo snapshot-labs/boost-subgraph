@@ -69,7 +69,6 @@ export function handleClaim(event: ClaimEvent): void {
     log.error("boost is null", [boostId])
   }
 
-
   entity.save()
 }
 
@@ -107,7 +106,7 @@ export function handleMint(event: MintEvent): void {
   const tokenAddress = event.params.boost.token.toHexString()
 
   let token = TokenEntity.load(tokenAddress)
-  if (token === null) {
+  if (token == null) {
     const tokenContract = erc20.bind(event.params.boost.token)
     token = new TokenEntity(tokenAddress)
     token.name = tokenContract.name()
@@ -116,11 +115,17 @@ export function handleMint(event: MintEvent): void {
     token.save()
   }
 
-  StrategyMetadataTemplate.create(event.params.strategyURI);
-
   const boostEntity = new BoostEntity(boostId.toString())
+
+  if (event.params.strategyURI.startsWith('ipfs://')) {
+    let hash = event.params.strategyURI.slice(7)
+    boostEntity.strategy = hash
+    StrategyMetadataTemplate.create(hash);
+  } else {
+    log.error("invalid strategyURI", [event.params.strategyURI])
+  }
+
   boostEntity.strategyURI = event.params.strategyURI
-  boostEntity.strategy = event.params.strategyURI
   boostEntity.chainId = "11155111"
   boostEntity.token = tokenAddress
   boostEntity.poolSize = event.params.boost.balance.toString()
