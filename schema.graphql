@@ -24,7 +24,6 @@ type Distribution @entity(immutable: true) {
 type Boost @entity {
   blockNumber: BigInt!
   id: String!
-  chainId: String!
   strategyURI: String!
   token: Token!
   poolSize: String!

@@ -1,6 +1,6 @@
 {
   "name": "boost-subgraph",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
