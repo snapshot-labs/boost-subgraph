@@ -126,7 +126,7 @@ export function handleMint(event: MintEvent): void {
   }
 
   boostEntity.strategyURI = event.params.strategyURI
-  boostEntity.chainId = "11155111"
+  boostEntity.chainId = "1"
   boostEntity.token = tokenAddress
   boostEntity.poolSize = event.params.boost.balance.toString()
   boostEntity.currentBalance = boostEntity.poolSize;

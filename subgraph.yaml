@@ -6,11 +6,11 @@ features:
 dataSources:
   - kind: ethereum
     name: boost
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x506661E5921f2c74B56eb380936f6e197C6cF49c"
+      address: "0x506661e5921f2c74b56eb380936f6e197c6cf49c"
       abi: boost
-      startBlock: 5280729
+      startBlock: 19225668
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

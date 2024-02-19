@@ -94,6 +94,10 @@ export function handleStrategyMetadata(content: Bytes): void {
         if (maybeProposal == null) return;
         strat.proposal = maybeProposal.toString();
 
+        let maybeEnv = params.get('env');
+        if (maybeEnv == null) return;
+        strat.env = maybeEnv.toString();
+
         let eligibility = createEligibilityEntity(params);
         if (eligibility == null) return;
         strat.eligibility = eligibility.id;
