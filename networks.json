@@ -1,0 +1,15 @@
+{
+    "mainnet": {
+      "Boost": {
+        "address": "0x506661e5921f2c74b56eb380936f6e197c6cf49c",
+        "startBlock": 19225668
+      }
+    },
+    "sepolia": {
+      "Boost": {
+        "address": "0x506661e5921f2c74b56eb380936f6e197c6cf49c",
+        "startBlock": 5280729
+      }
+    }
+}
+  

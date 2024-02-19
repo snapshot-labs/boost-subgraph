@@ -1,14 +1,13 @@
 {
-  "name": "boost-sepolia",
+  "name": "boost-subgraph",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ pscott/boost-sepolia",
-    "create-local": "graph create --node http://localhost:8020/ pscott/boost-sepolia",
-    "remove-local": "graph remove --node http://localhost:8020/ pscott/boost-sepolia",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pscott/boost-sepolia",
+    "deploy-studio": "graph deploy --studio -l v${npm_package_version}",
+    "deploy-studio-mainnet": "yarn deploy-studio --network mainnet boost",
+    "deploy-studio-sepolia": "yarn deploy-studio --network sepolia boost-sepolia",
     "test": "graph test"
   },
   "dependencies": {

@@ -5,12 +5,12 @@ features:
   - ipfsOnEthereumContracts
 dataSources:
   - kind: ethereum
-    name: boost
-    network: mainnet
+    name: Boost
+    network: sepolia
     source:
+      abi: Boost
       address: "0x506661e5921f2c74b56eb380936f6e197c6cf49c"
-      abi: boost
-      startBlock: 19225668
+      startBlock: 5280729
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,8 +20,8 @@ dataSources:
         - Deposit
         - Mint
       abis:
-        - name: boost
-          file: ./abis/boost.json
+        - name: Boost
+          file: ./abis/Boost.json
         - name: erc20
           file: ./abis/ERC20.json
       eventHandlers:
@@ -49,3 +49,4 @@ templates:
       abis:
         - name: boost
           file: ./abis/boost.json
+    network: sepolia
