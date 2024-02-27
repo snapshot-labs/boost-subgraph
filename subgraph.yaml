@@ -9,7 +9,7 @@ dataSources:
     network: sepolia
     source:
       abi: Boost
-      address: "0x506661e5921f2c74b56eb380936f6e197c6cf49c"
+      address: "0xc8Ae580637bf91b7E2c0A8cf369Fb24e0253cA5a"
       startBlock: 5280729
     mapping:
       kind: ethereum/events
