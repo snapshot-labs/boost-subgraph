@@ -61,6 +61,11 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
     if (maybeNumWinners !== null) {
       distribution.numWinners = maybeNumWinners.toString();
     }
+
+    let maybeDistributionLimit = distrib.get('limit');
+    if (maybeDistributionLimit !== null) {
+      distribution.limit = maybeDistributionLimit.toString();
+    }
   }
 
   distribution.save();
