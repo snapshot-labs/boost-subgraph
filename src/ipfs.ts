@@ -64,7 +64,10 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
 
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
-      distribution.limit = maybeDistributionLimit.toString();
+      // Ensure 0 < limit < 10_000
+      if (maybeDistributionLimit.toU64() <= 10_000 && maybeDistributionLimit.toU64() > 0) {
+        distribution.limit = maybeDistributionLimit.toString();
+      }
     }
   }
 
