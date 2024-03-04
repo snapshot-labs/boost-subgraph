@@ -54,26 +54,19 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
   if (distribution.type == 'weighted') {
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
-      // Only index distribution limit if it's positive
-      if (maybeDistributionLimit.toI64() > 0) {
         distribution.limit = maybeDistributionLimit.toString();
-      }
     }
   } else if (distribution.type == 'lottery') {
     let maybeNumWinners = distrib.get('numWinners');
     if (maybeNumWinners !== null) {
       // Only index numWinners if it's positive
-      if (maybeNumWinners.toI64() > 0) {
         distribution.numWinners = maybeNumWinners.toString();
-      }
     }
 
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
       // Ensure 0 < limit < 10_000
-      if (maybeDistributionLimit.toU64() <= 10_000 && maybeDistributionLimit.toU64() > 0) {
         distribution.limit = maybeDistributionLimit.toString();
-      }
     }
   } else {
     log.error("Unknown distribution type", []);
