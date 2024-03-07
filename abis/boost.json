@@ -469,7 +469,7 @@
         "type": "address"
       }
     ],
-    "name": "burn",
+    "name": "withdrawAndBurn",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
