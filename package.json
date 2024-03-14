@@ -1,7 +1,7 @@
 {
   "name": "boost-subgraph",
   "version": "0.0.9",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
