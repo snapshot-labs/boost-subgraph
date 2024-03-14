@@ -7,7 +7,7 @@
     "build": "graph build",
     "deploy-studio": "graph deploy --studio -l v${npm_package_version}",
     "deploy-studio-mainnet": "yarn deploy-studio --network mainnet boost",
-    "deploy-studio-polygon": "yarn deploy-studio --network polygon boost",
+    "deploy-studio-polygon": "yarn deploy-studio --network matic boost",
     "deploy-studio-sepolia": "yarn deploy-studio --network sepolia boost-sepolia",
     "test": "graph test"
   },
