@@ -1,12 +1,13 @@
 {
   "name": "boost-subgraph",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy-studio": "graph deploy --studio -l v${npm_package_version}",
     "deploy-studio-mainnet": "yarn deploy-studio --network mainnet boost",
+    "deploy-studio-polygon": "yarn deploy-studio --network polygon boost",
     "deploy-studio-sepolia": "yarn deploy-studio --network sepolia boost-sepolia",
     "test": "graph test"
   },
