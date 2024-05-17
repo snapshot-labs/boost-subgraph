@@ -31,7 +31,7 @@ function createEligibilityEntity(params: TypedMap<string, JSONValue>): Eligibili
       eligibility.choice = maybeChoice.toString();
     } else if (eligibility.type == "incentive") {
       // do nothing
-    } else if (eligibility.type == "prediciton") {
+    } else if (eligibility.type == "prediction") {
       // do nothing
     } else {
       log.error("unknown eligibility type", []);
