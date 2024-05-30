@@ -10,7 +10,7 @@
     "deploy-studio-polygon": "yarn deploy-studio --network matic boost-polygon",
     "deploy-studio-sepolia": "yarn deploy-studio --network sepolia boost-sepolia",
     "deploy-studio-base": "yarn deploy-studio --network base boost-base",
-    "deploy-studio-all": "yarn deploy-studio-sepolia && yarn deploy-studio-polygon && yarn deploy-studio-mainnet",
+    "deploy-studio-all": "yarn deploy-studio-sepolia && yarn deploy-studio-polygon && yarn deploy-studio-mainnet && yarn deploy-studio-base",
     "test": "graph test"
   },
   "dependencies": {
