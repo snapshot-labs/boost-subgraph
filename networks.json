@@ -16,5 +16,11 @@
       "address": "0x8E8913197114c911F13cfBfCBBD138C1DC74B964",
       "startBlock": 5435385
     }
+  },
+  "base": {
+    "Boost": {
+      "address": "0x8E8913197114c911F13cfBfCBBD138C1DC74B964",
+      "startBlock": 15138403
+    }
   }
 }
