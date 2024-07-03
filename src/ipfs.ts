@@ -46,26 +46,31 @@ function createEligibilityEntity(params: TypedMap<string, JSONValue>): Eligibili
 function createDistributionEntity(params: TypedMap<string, JSONValue>): DistributionEntity | null {
   let distribution = new DistributionEntity(dataSource.stringParam());
   let maybeDistrib = params.get('distribution');
+  log.error("maybeDistrib", []);
   if (maybeDistrib == null) return null;
   let distrib = maybeDistrib.toObject();
 
   let maybeDistributionType = distrib.get('type');
+  log.error("distribution type", []);
   if (maybeDistributionType == null) return null;
   distribution.type = maybeDistributionType.toString();
 
   if (distribution.type == 'weighted') {
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
+      log.error("weighted distribution limit", []);
       distribution.limit = maybeDistributionLimit.toString();
     }
   } else if (distribution.type == 'lottery') {
     let maybeNumWinners = distrib.get('numWinners');
     if (maybeNumWinners !== null) {
+      log.error("distribution num winners", []);
       distribution.numWinners = maybeNumWinners.toString();
     }
 
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
+      log.error("limit", []);
       distribution.limit = maybeDistributionLimit.toString();
     }
   } else {
