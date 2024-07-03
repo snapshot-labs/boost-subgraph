@@ -61,13 +61,11 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
   } else if (distribution.type == 'lottery') {
     let maybeNumWinners = distrib.get('numWinners');
     if (maybeNumWinners !== null) {
-      // Only index numWinners if it's positive
       distribution.numWinners = maybeNumWinners.toString();
     }
 
     let maybeDistributionLimit = distrib.get('limit');
     if (maybeDistributionLimit !== null) {
-      // Ensure 0 < limit < 10_000
       distribution.limit = maybeDistributionLimit.toString();
     }
   } else {
