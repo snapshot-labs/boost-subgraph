@@ -63,7 +63,7 @@ function createDistributionEntity(params: TypedMap<string, JSONValue>): Distribu
     }
   } else if (distribution.type == 'lottery') {
     let maybeNumWinners = distrib.get('numWinners');
-    if (maybeNumWinners !== null) {
+    if (maybeNumWinners !== null && (maybeNumWinners.kind == 3 || maybeNumWinners.kind == 4)) {
       log.error("distribution num winners", []);
       distribution.numWinners = maybeNumWinners.toString();
     }
